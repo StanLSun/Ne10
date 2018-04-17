@@ -140,7 +140,7 @@ if(ANDROID_PLATFORM)
     ${CMAKE_C_FLAGS}")
 elseif(GNULINUX_PLATFORM)
     if("${NE10_TARGET_ARCH}" STREQUAL "armv7")
-      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mthumb -march=armv7-a -mfpu=vfp3 -funsafe-math-optimizations")
+      set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -mthumb -march=armv7-a -mfpu=vfp3")
       set(CMAKE_ASM_FLAGS "${CMAKE_C_FLAGS} -mthumb -march=armv7-a -mfpu=neon")
       # Turn on asm optimization for Linux on ARM v7.
       set(NE10_ASM_OPTIMIZATION on)
