@@ -1,17 +1,17 @@
 all_jobs: &all_jobs
   jobs:
-    - ios-armv7-release
-    - ios-armv7-debug
-    - ios-aarch64-release
-    - ios-aarch64-debug
-    - android-armv7-release
-    - android-armv7-debug
-    - android-aarch64-release
-    - android-aarch64-debug
+    # - ios-armv7-release
+    # - ios-armv7-debug
+    # - ios-aarch64-release
+    # - ios-aarch64-debug
+    # - android-armv7-release
+    # - android-armv7-debug
+    # - android-aarch64-release
+    # - android-aarch64-debug
     - linux-armv7-release
-    - linux-armv7-debug
+    # - linux-armv7-debug
     - linux-aarch64-release
-    - linux-aarch64-debug
+    # - linux-aarch64-debug
 
 build_steps: &build_steps
   steps:
