@@ -30,6 +30,7 @@
  */
 
 #include "seatest.h"
+#include "NE10.h"
 
 void test_fixture_physics (void);
 
@@ -51,6 +52,18 @@ void my_suite_teardown (void)
 
 int main (ne10_int32_t argc, char** argv)
 {
+    if (ne10_init() == NE10_ERR)
+    {
+        fprintf (stdout, "Fail to initialize Ne10.");
+        return 1;
+    }
+
+    if (ne10_HasNEON() == NE10_ERR)
+    {
+        fprintf (stdout, "NEON is not available.");
+        return 1;
+    }
+
     suite_setup (my_suite_setup);
     suite_teardown (my_suite_teardown);
     return !run_tests (all_tests);

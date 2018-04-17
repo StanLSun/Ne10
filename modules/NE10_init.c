@@ -31,7 +31,7 @@
 
 #include "NE10.h"
 
-#define CPUINFO_BUFFER_SIZE  (1024*30)
+#define CPUINFO_BUFFER_SIZE  (1024)
 
 // This local variable indicates whether or not the running platform supports ARM NEON
 ne10_result_t is_NEON_available = NE10_ERR;
@@ -47,8 +47,8 @@ ne10_result_t ne10_init()
 #ifndef __MACH__
     FILE*   infofile = NULL;               // To open the file /proc/cpuinfo
     ne10_int8_t    cpuinfo[CPUINFO_BUFFER_SIZE];  // The buffer to read in the string
-    ne10_uint32_t  bytes = 0;                     // Numbers of bytes read from the file
     ne10_int32_t     i = 0;                         // Temporary loop counter
+    ne10_int8_t     *c = NULL;
 
     memset (cpuinfo, 0, CPUINFO_BUFFER_SIZE);
     infofile = fopen ("/proc/cpuinfo", "r");
@@ -59,29 +59,35 @@ ne10_result_t ne10_init()
         return NE10_ERR;
     }
 
-    bytes    = fread (cpuinfo, 1, sizeof (cpuinfo), infofile);
-    fclose (infofile);
-
-    if (0 == bytes || CPUINFO_BUFFER_SIZE == bytes)
+    while (fgets(cpuinfo, CPUINFO_BUFFER_SIZE, infofile))
     {
-        fprintf (stderr, "ERROR: Couldn't read the file \"/proc/cpuinfo\". NE10_init() failed.\n");
-        return NE10_ERR;
-    }
-
-    while ('\0' != cpuinfo[i])
-    {
-        cpuinfo[i] = (ne10_int8_t) tolower (cpuinfo[i]);
-        ++i;
-    }
-
-    if (strstr ((const char *)cpuinfo, "neon") != NULL ||
-        strstr ((const char *)cpuinfo, "asimd") != NULL)
-    {
-        is_NEON_available = NE10_OK;
+        c = cpuinfo;
+        for (; *c; c++)
+        {
+            *c = (ne10_int8_t) tolower (*c);
+        }
+        if (strstr ((const char *)cpuinfo, "neon") != NULL ||
+            strstr ((const char *)cpuinfo, "asimd") != NULL)
+        {
+            is_NEON_available = NE10_OK;
+            break;
+        }
     }
 #else  //__MACH__
     is_NEON_available = NE10_OK;
 #endif //__MACH__
+
+#ifndef NDEBUG
+    if (is_NEON_available)
+    {
+        fprintf(stdout, "NEON is available.\n");
+    }
+    else
+    {
+        fprintf(stdout, "NEON is not available.");
+    }
+#endif
+
 
 #if defined (NE10_ENABLE_MATH)
     status = ne10_init_math (is_NEON_available);
